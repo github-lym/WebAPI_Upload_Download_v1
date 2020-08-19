@@ -41,6 +41,7 @@ namespace Upoload1.Controllers
             using(var stream = new FileStream(path, FileMode.Open))
             {
                 await stream.CopyToAsync(memoryStream);
+                await stream.FlushAsync();
             }
             memoryStream.Seek(0, SeekOrigin.Begin);
 
@@ -63,6 +64,7 @@ namespace Upoload1.Controllers
                     using(var stream = new FileStream(path_checked, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
+                        await stream.FlushAsync();
                     };
 
                 }
