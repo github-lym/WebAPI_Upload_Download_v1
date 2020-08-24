@@ -14,11 +14,11 @@ namespace Upoload1.Controllers
     [ApiController]
     public class FileController : ControllerBase
     {
-        private readonly static Dictionary<string, string> _contentTypes = new Dictionary<string, string>
-        { //
-            { ".xlsx", "application/octet-stream" },
-            { ".jpg", "application/octet-stream" }
-        };
+        // private readonly static Dictionary<string, string> _contentTypes = new Dictionary<string, string>
+        // { //
+        //     { ".xlsx", "application/octet-stream" },
+        //     { ".jpg", "application/octet-stream" }
+        // };
         private readonly string _folder;
 
         public FileController(IWebHostEnvironment env)
@@ -46,7 +46,9 @@ namespace Upoload1.Controllers
             memoryStream.Seek(0, SeekOrigin.Begin);
 
             // 回傳檔案到 Client 需要附上 Content Type，否則瀏覽器會解析失敗。
-            return new FileStreamResult(memoryStream, _contentTypes[Path.GetExtension(path).ToLowerInvariant()]);
+            // return new FileStreamResult(memoryStream, _contentTypes[Path.GetExtension(path).ToLowerInvariant()]);
+            // 修改成這樣  每種檔案都是直接下載
+            return new FileStreamResult(memoryStream, "application/octet-stream");
         }
 
         // POST api/file
