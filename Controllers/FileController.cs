@@ -29,26 +29,29 @@ namespace Upoload1.Controllers
 
         // GET api/file
         [HttpGet("{fileName}")]
-        public async Task<IActionResult> DownloadFile(string fileName)
+        public IActionResult DownloadFile(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName))
+            var path = $@"{_folder}\{fileName}";
+
+            if (string.IsNullOrEmpty(fileName) || !System.IO.File.Exists(path))
             {
                 return NotFound();
             }
 
-            var path = $@"{_folder}\{fileName}";
-            var memoryStream = new MemoryStream();
-            using(var stream = new FileStream(path, FileMode.Open))
-            {
-                await stream.CopyToAsync(memoryStream);
-                await stream.FlushAsync();
-            }
-            memoryStream.Seek(0, SeekOrigin.Begin);
+            // var memoryStream = new MemoryStream();
+            // using(var stream = new FileStream(path, FileMode.Open))
+            // {
+            //     await stream.CopyToAsync(memoryStream);
+            //     await stream.FlushAsync();
+            // }
+            // memoryStream.Seek(0, SeekOrigin.Begin);
 
-            // 回傳檔案到 Client 需要附上 Content Type，否則瀏覽器會解析失敗。
-            // return new FileStreamResult(memoryStream, _contentTypes[Path.GetExtension(path).ToLowerInvariant()]);
-            // 修改成這樣  每種檔案都是直接下載
-            return new FileStreamResult(memoryStream, "application/octet-stream");
+            // // 回傳檔案到 Client 需要附上 Content Type，否則瀏覽器會解析失敗。
+            // // return new FileStreamResult(memoryStream, _contentTypes[Path.GetExtension(path).ToLowerInvariant()]);
+            // // 修改成這樣  每種檔案都是直接下載
+            // return new FileStreamResult(memoryStream, "application/octet-stream");
+
+            return PhysicalFile(path, "application/octet-stream");
         }
 
         // POST api/file
